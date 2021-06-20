@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fastapi-tdd-docker"
+name = "app"
 version = "0.1.0"
 description = ""
 authors = ["Adam Gagorik <adam.gagorik@gmail.com>"]
