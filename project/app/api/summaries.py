@@ -2,6 +2,7 @@
 REST API endpoints for summary table.
 """
 from fastapi import APIRouter, HTTPException
+from typing import List
 
 from app.api import crud
 from app.models.tortoise import SummarySchema
@@ -30,3 +31,11 @@ async def read_summary(id: int) -> SummarySchema:
         raise HTTPException(status_code=404, detail="Summary not found")
 
     return summary
+
+
+@router.get("/", response_model=List[SummarySchema])
+async def read_all_summaries() -> List[SummarySchema]:
+    """
+    Get all the summaries from the database.
+    """
+    return await crud.get_all()
