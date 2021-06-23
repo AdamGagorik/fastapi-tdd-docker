@@ -3,7 +3,7 @@ Create, Read, Update, Delete methods for the database.
 """
 from app.models.pydantic import SummaryPayloadSchema
 from app.models.tortoise import TextSummary
-from typing import Union
+from typing import Union, List, Dict
 
 
 async def post(payload: SummaryPayloadSchema) -> int:
@@ -35,3 +35,11 @@ async def get(id: int) -> Union[dict, None]:
     if summary:
         return summary[0]
     return None
+
+
+async def get_all() -> List[Dict]:
+    """
+    Get all the summaries from the database.
+    """
+    summaries = await TextSummary.all().values()
+    return summaries
