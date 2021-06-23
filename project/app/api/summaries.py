@@ -26,4 +26,7 @@ async def read_summary(id: int) -> SummarySchema:
     Get a summary entry from database.
     """
     summary = await crud.get(id)
+    if not summary:
+        raise HTTPException(status_code=404, detail="Summary not found")
+
     return summary
