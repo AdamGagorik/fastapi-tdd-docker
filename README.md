@@ -1,5 +1,7 @@
 # FastAPI + Docker
 
+![Continuous Integration and Delivery](https://github.com/AdamGagorik/fastapi-tdd-docker/workflows/Continuous%20Integration%20and%20Delivery/badge.svg?branch=master)
+
 This project is from `testdriven.io`.
 
 - The `FastAPI` module is used to create REST endpoints
