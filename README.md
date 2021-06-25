@@ -14,3 +14,14 @@ This project is from `testdriven.io`.
 - `Heroku` is used to deploy and host the production environment in the cloud 
 - `GitHubPackages` is used to store Docker images
 - `GitHubActions` is used to automate CI tasks
+
+# Endpoints
+
+| Endpoint         | HTTP Method     | CRUD Method     | Result               | Done |
+|------------------|-----------------|-----------------|----------------------|------|
+| `/ping`          |                 |                 | get test json        | yes  |
+| `/summaries`     | **GET**         | **READ**        | get all summaries    | yes  |
+| `/summaries/:id` | **GET**         | **READ**        | get a single summary | yes  |
+| `/summaries`     | **POST**        | **CREATE**      | add a summary        | yes  |
+| `/summaries/:id` | **PUT**         | **UPDATE**      | update a summary     |      |
+| `/summaries/:id` | **DELETE**      | **DELETE**      | delete a summary     |      |
