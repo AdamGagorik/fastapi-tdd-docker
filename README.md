@@ -23,5 +23,5 @@ This project is from `testdriven.io`.
 | `/summaries`     | **GET**         | **READ**        | get all summaries    | yes  |
 | `/summaries/:id` | **GET**         | **READ**        | get a single summary | yes  |
 | `/summaries`     | **POST**        | **CREATE**      | add a summary        | yes  |
-| `/summaries/:id` | **PUT**         | **UPDATE**      | update a summary     |      |
-| `/summaries/:id` | **DELETE**      | **DELETE**      | delete a summary     |      |
+| `/summaries/:id` | **PUT**         | **UPDATE**      | update a summary     | yes  |
+| `/summaries/:id` | **DELETE**      | **DELETE**      | delete a summary     | yes  |
