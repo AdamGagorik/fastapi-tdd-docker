@@ -13,3 +13,6 @@ apply:
 	docker-compose exec web flake8 .
 	docker-compose exec web black .
 	docker-compose exec web isort .
+
+schema:
+	docker-compose exec web python app/db.py
