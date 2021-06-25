@@ -24,13 +24,13 @@ async def post(payload: SummaryPayloadSchema) -> int:
 
 async def get(id: int) -> Union[dict, None]:
     """
-    Get existing entry from the database.
+    Fetch existing entry from the database.
 
     Parameters:
         id: The ID of the entry to get.
 
     Returns:
-        The response.
+        The summary that was fetched.
     """
     summary = await TextSummary.filter(id=id).first().values()
     if summary:
@@ -44,3 +44,18 @@ async def get_all() -> List[Dict]:
     """
     summaries = await TextSummary.all().values()
     return summaries
+
+
+async def delete(id: int) -> int:
+    """
+    Delete existing entry from the database.
+
+    Parameters:
+        id: The ID of the entry to delete.
+
+    Returns:
+        The summary that was deleted.
+    """
+    # noinspection PyUnresolvedReferences
+    summary = await TextSummary.filter(id=id).first().delete()
+    return summary
