@@ -3,7 +3,8 @@ Create, Read, Update, Delete methods for the database.
 """
 from typing import Dict, List, Union
 
-from app.models.pydantic import SummaryPayloadSchema
+from app.models.pydantic import (SummaryPayloadSchema,
+                                 SummaryUpdatePayloadSchema)
 from app.models.tortoise import TextSummary
 
 
@@ -59,3 +60,23 @@ async def delete(id: int) -> int:
     # noinspection PyUnresolvedReferences
     summary = await TextSummary.filter(id=id).first().delete()
     return summary
+
+
+async def put(id: int, payload: SummaryUpdatePayloadSchema) -> Union[dict, None]:
+    """
+    Update an existing summary.
+
+    Parameters:
+        id: The ID of the summary to update.
+        payload: The data to update with.
+
+    Returns:
+         The summary that was updated.
+    """
+    summary = await TextSummary.filter(id=id).update(
+        url=payload.url, summary=payload.summary
+    )
+    if summary:
+        updated_summary = await TextSummary.filter(id=id).first().values()
+        return updated_summary[0]
+    return None
