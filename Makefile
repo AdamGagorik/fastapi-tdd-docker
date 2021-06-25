@@ -1,3 +1,14 @@
+APP_URL=`heroku info -s | grep web_url | cut -d= -f2`
+
+open:
+	open ${APP_URL}ping
+
+stop:
+	 heroku ps:scale web=0
+
+start:
+	 heroku ps:scale web=1
+
 build:
 	docker-compose up -d --build
 
