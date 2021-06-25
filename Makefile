@@ -19,3 +19,6 @@ schema:
 
 github-image:
 	docker build -f project/Dockerfile.prod -t docker.pkg.github.com/adamgagorik/fastapi-tdd-docker/summarizer:latest ./project
+
+github-image-push:
+	docker push docker.pkg.github.com/adamgagorik/fastapi-tdd-docker/summarizer:latest
