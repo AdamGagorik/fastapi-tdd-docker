@@ -6,12 +6,12 @@ define __help_message__
 [targets]
     make help                     : show this message
     make docker-build             : delete the docker images and rebuild them from scratch
+    make docker-schema            : run task for SQL for new image after running build
     make docker-tests             : run the unit tests inside the docker container
     make docker-tools-check       : execute dev tools but do not change code
     make docker-tools-apply       : execute dev tools and change the code
     make docker-github-image      : build the docker image for github
     make docker-github-image-push : push the built docker image
-    make sql-schema               : run task for SQL for new img
     make heroku-open              : heroku application browser
     make heroku-stop              : heroku application start
     make heroku-start             : heroku application kill
@@ -27,6 +27,7 @@ help:
 .PHONY : docker-build
 docker-build:
 	docker-compose up -d --build
+	$(MAKE) docker-schema
 
 ################################################################################
 .PHONY : docker-tests
