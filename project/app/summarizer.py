@@ -24,3 +24,8 @@ def generate_summary(url: str) -> str:
         article.nlp()
 
     return article.summary
+
+
+if __name__ == '__main__':
+    summary = generate_summary(url=r'https://testdriven.io')
+    print(summary)
