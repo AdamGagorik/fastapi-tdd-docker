@@ -3,8 +3,7 @@ Create, Read, Update, Delete methods for the database.
 """
 from typing import Dict, List, Union
 
-from app.models.pydantic import (SummaryPayloadSchema,
-                                 SummaryUpdatePayloadSchema)
+from app.models.pydantic import SummaryPayloadSchema, SummaryUpdatePayloadSchema
 from app.models.tortoise import TextSummary
 
 

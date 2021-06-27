@@ -123,39 +123,67 @@ def test_update_summary(test_app_with_db):
     assert response_dict["created_at"]
 
 
-@pytest.mark.parametrize("summary_id, payload, status_code, detail", [
-    # cant update a summary that does not exist
-    [999, {"url": "https://foo.bar", "summary": "updated!"}, 404, "Summary not found"],
-    # cant update summary 0
+@pytest.mark.parametrize(
+    "summary_id, payload, status_code, detail",
     [
-        0,
-        {"url": "https://foo.bar", "summary": "updated!"},
-        422,
-        [{"loc": ["path", "id"], "msg": "ensure this value is greater than 0", "type": "value_error.number.not_gt", "ctx": {"limit_value": 0}}]
-    ],
-    # cant give empty json
-    [
-        1,
-        {},
-        422,
+        # cant update a summary that does not exist
         [
-            {"loc": ["body", "url"], "msg": "field required", "type": "value_error.missing"},
-            {"loc": ["body", "summary"], "msg": "field required", "type": "value_error.missing"}
-        ]
+            999,
+            {"url": "https://foo.bar", "summary": "updated!"},
+            404,
+            "Summary not found",
+        ],
+        # cant update summary 0
+        [
+            0,
+            {"url": "https://foo.bar", "summary": "updated!"},
+            422,
+            [
+                {
+                    "loc": ["path", "id"],
+                    "msg": "ensure this value is greater than 0",
+                    "type": "value_error.number.not_gt",
+                    "ctx": {"limit_value": 0},
+                }
+            ],
+        ],
+        # cant give empty json
+        [
+            1,
+            {},
+            422,
+            [
+                {
+                    "loc": ["body", "url"],
+                    "msg": "field required",
+                    "type": "value_error.missing",
+                },
+                {
+                    "loc": ["body", "summary"],
+                    "msg": "field required",
+                    "type": "value_error.missing",
+                },
+            ],
+        ],
+        # must also give summary text
+        [
+            1,
+            {"url": "https://foo.bar"},
+            422,
+            [
+                {
+                    "loc": ["body", "summary"],
+                    "msg": "field required",
+                    "type": "value_error.missing",
+                }
+            ],
+        ],
     ],
-    # must also give summary text
-    [
-        1,
-        {"url": "https://foo.bar"},
-        422,
-        [{"loc": ["body", "summary"], "msg": "field required", "type": "value_error.missing"}]
-    ],
-])
-def test_update_summary_invalid(test_app_with_db, summary_id, payload, status_code, detail):
-    response = test_app_with_db.put(
-        f"/summaries/{summary_id}/",
-        json=payload
-    )
+)
+def test_update_summary_invalid(
+    test_app_with_db, summary_id, payload, status_code, detail
+):
+    response = test_app_with_db.put(f"/summaries/{summary_id}/", json=payload)
     assert response.status_code == status_code
     assert response.json()["detail"] == detail
 
@@ -163,8 +191,7 @@ def test_update_summary_invalid(test_app_with_db, summary_id, payload, status_co
 def test_update_summary_invalid_url(test_app):
     # can not give invalid URL
     response = test_app.put(
-        "/summaries/1/",
-        json={"url": "invalid://url", "summary": "updated!"}
+        "/summaries/1/", json={"url": "invalid://url", "summary": "updated!"}
     )
     assert response.status_code == 422
     assert response.json()["detail"][0]["msg"] == "URL scheme not permitted"
