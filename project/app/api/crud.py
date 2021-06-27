@@ -5,6 +5,7 @@ from typing import Dict, List, Union
 
 from app.models.pydantic import SummaryPayloadSchema, SummaryUpdatePayloadSchema
 from app.models.tortoise import TextSummary
+from app.summarizer import generate_summary
 
 
 async def post(payload: SummaryPayloadSchema) -> int:
@@ -17,7 +18,8 @@ async def post(payload: SummaryPayloadSchema) -> int:
     Returns:
         The ID of the new entry.
     """
-    summary = TextSummary(url=payload.url, summary="dummy summary")
+    article_summary = generate_summary(payload.url)
+    summary = TextSummary(url=payload.url, summary=article_summary)
     await summary.save()
     return summary.id
 
