@@ -1,12 +1,15 @@
-from newspaper import Article
 import nltk
 
+from newspaper import Article
+from app.models.tortoise import TextSummary
 
-def generate_summary(url: str) -> str:
+
+async def generate_summary(summary_id: int, url: str) -> None:
     """
     Use newspaper3k to download HTML text and summarize it with NLP.
 
     Parameters:
+        summary_id: The ID of the summary to update in the database.
         url: The URL to parse and download.
 
     Returns:
@@ -23,9 +26,6 @@ def generate_summary(url: str) -> str:
     finally:
         article.nlp()
 
-    return article.summary
+    summary = article.summary
 
-
-if __name__ == '__main__':
-    summary = generate_summary(url=r'https://testdriven.io')
-    print(summary)
+    await TextSummary.filter(id=summary_id).update(summary=summary)
