@@ -2,6 +2,18 @@
 APP_URL=https://evening-bastion-46853.herokuapp.com
 
 ################################################################################
+CLEAN=find .                                 \
+	-not \( -path ./.git           -prune \) \
+	-not \( -path ./venv           -prune \) \
+	-not \( -path ./.idea          -prune \) \
+	\(                                       \
+		    -type f -name \*.pyc             \
+		-or -type d -name __pycache__        \
+		-or -type d -name .ipynb_checkpoints \
+	\)                                       \
+	-print
+
+################################################################################
 define __help_message__
 [targets]
     make help                     : show this message
@@ -107,3 +119,13 @@ docker-build-prod:
 docker-clean:
 	docker system prune -f
 	docker volume prune -f
+
+################################################################################
+.PHONY : clean
+clean:
+	-@$(CLEAN)
+
+################################################################################
+.PHONY : force
+force:
+	-@$(CLEAN) | xargs -I xxx rm -rvf xxx
