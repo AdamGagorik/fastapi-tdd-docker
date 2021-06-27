@@ -1,4 +1,5 @@
-APP_URL=`heroku info -s | grep web_url | cut -d= -f2`
+# APP_URL=`heroku info -s | grep web_url | cut -d= -f2`
+APP_URL=https://evening-bastion-46853.herokuapp.com
 
 ################################################################################
 define __help_message__
@@ -74,3 +75,19 @@ docker-github-image:
 .PHONY : docker-github-image-push
 docker-github-image-push:
 	docker push docker.pkg.github.com/adamgagorik/fastapi-tdd-docker/summarizer:latest
+
+heroku-test-httpie:
+	@echo "Read summaries"
+	http GET ${APP_URL}/summaries/
+	@echo
+	@echo "Read summary 1"
+	http GET ${APP_URL}/summaries/1/
+	@echo
+	@echo "Create a summary"
+	http --json POST ${APP_URL}/summaries/ url=https://testdriven.io
+	@echo
+	@echo "Update a summary"
+	http --json PUT ${APP_URL}/summaries/2/ url=https://testdriven.io summary=super
+	@echo
+	@echo "Delete a summary"
+	http DELETE ${APP_URL}/summaries/2/
