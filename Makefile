@@ -28,6 +28,9 @@ apply:
 schema:
 	docker-compose exec web python app/db.py
 
+coverage:
+	docker-compose exec web python -m pytest --cov="."
+
 github-image:
 	docker build -f project/Dockerfile.prod -t docker.pkg.github.com/adamgagorik/fastapi-tdd-docker/summarizer:latest ./project
 
