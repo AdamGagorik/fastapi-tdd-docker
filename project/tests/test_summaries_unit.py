@@ -10,6 +10,7 @@ from app.api import crud
 def mock_generate_summary(monkeypatch):
     def mock_generate_summary(summary_id, url):
         return "This is a dummy summary"
+
     monkeypatch.setattr(summaries, "generate_summary", mock_generate_summary)
 
 
