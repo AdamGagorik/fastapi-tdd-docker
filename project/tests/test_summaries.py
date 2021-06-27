@@ -9,8 +9,9 @@ def test_create_summary(test_app_with_db):
     assert response.json()["url"] == "https://foo.bar"
 
 
-def test_create_summaries_invalid_json(test_app_with_db):
-    response = test_app_with_db.post("/summaries/", json={})
+def test_create_summaries_invalid_json(test_app):
+    # empty JSON not allowed
+    response = test_app.post("/summaries/", json={})
     assert response.status_code == 422
     assert response.json() == {
         "detail": [
@@ -21,6 +22,11 @@ def test_create_summaries_invalid_json(test_app_with_db):
             }
         ]
     }
+
+    # URL format must be correct
+    response = test_app.post("/summaries/", json={"url": "invalid://url"})
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["msg"] == "URL scheme not permitted"
 
 
 def test_read_summary(test_app_with_db):
