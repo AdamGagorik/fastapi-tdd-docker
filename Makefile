@@ -8,7 +8,9 @@ CLEAN=find .                                 \
 	-not \( -path ./.idea          -prune \) \
 	\(                                       \
 		    -type f -name \*.pyc             \
+		-or -type f -name .coverage          \
 		-or -type d -name __pycache__        \
+		-or -type d -name .pytest_cache      \
 		-or -type d -name .ipynb_checkpoints \
 	\)                                       \
 	-print
