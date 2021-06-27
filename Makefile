@@ -40,10 +40,10 @@ docker-schema:
 ################################################################################
 .PHONY : docker-tools-check
 docker-tools-check:
-	docker-compose exec web python -m pytest --cov="."
-	docker-compose exec web flake8 .
-	docker-compose exec web black . --check
-	docker-compose exec web isort . --check-only
+	-docker-compose exec web python -m pytest --cov="."
+	-docker-compose exec web flake8 .
+	-docker-compose exec web black . --check
+	-docker-compose exec web isort . --check-only
 
 ################################################################################
 .PHONY : docker-tools-apply
