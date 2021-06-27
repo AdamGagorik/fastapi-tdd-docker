@@ -57,7 +57,7 @@ async def delete_summary(id: int) -> SummaryResponseSchema:
 
 
 @router.put("/{id}/", response_model=SummarySchema)
-async def update_summary(id: int, payload: SummaryUpdatePayloadSchema) -> SummarySchema:
+async def update_summary(payload: SummaryUpdatePayloadSchema, id: int = Path(..., gt=0)) -> SummarySchema:
     """
     Update a summary.
     """
