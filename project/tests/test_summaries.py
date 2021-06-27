@@ -1,6 +1,7 @@
 """
 Tests for REST API of summary table.
 """
+import pytest
 
 
 def test_create_summary(test_app_with_db):
@@ -122,76 +123,47 @@ def test_update_summary(test_app_with_db):
     assert response_dict["created_at"]
 
 
-def test_update_summary_incorrect_id(test_app_with_db):
+@pytest.mark.parametrize("summary_id, payload, status_code, detail", [
     # cant update a summary that does not exist
-    response = test_app_with_db.put(
-        "/summaries/999/", json={"url": "https://foo.bar", "summary": "updated!"}
-    )
-    assert response.status_code == 404
-    assert response.json()["detail"] == "Summary not found"
-
+    [999, {"url": "https://foo.bar", "summary": "updated!"}, 404, "Summary not found"],
     # cant update summary 0
-    response = test_app_with_db.put(
-        f"/summaries/0/",
-        json={"url": "https://foo.bar", "summary": "updated!"}
-    )
-    assert response.status_code == 422
-    assert response.json() == {
-        "detail": [
-            {
-                "loc": ["path", "id"],
-                "msg": "ensure this value is greater than 0",
-                "type": "value_error.number.not_gt",
-                "ctx": {"limit_value": 0},
-            }
+    [
+        0,
+        {"url": "https://foo.bar", "summary": "updated!"},
+        422,
+        [{"loc": ["path", "id"], "msg": "ensure this value is greater than 0", "type": "value_error.number.not_gt", "ctx": {"limit_value": 0}}]
+    ],
+    # cant give empty json
+    [
+        1,
+        {},
+        422,
+        [
+            {"loc": ["body", "url"], "msg": "field required", "type": "value_error.missing"},
+            {"loc": ["body", "summary"], "msg": "field required", "type": "value_error.missing"}
         ]
-    }
-
-
-def test_update_summary_invalid_json(test_app_with_db):
-    response = test_app_with_db.post("/summaries/", json={"url": "https://foo.bar"})
-    summary_id = response.json()["id"]
-
-    response = test_app_with_db.put(f"/summaries/{summary_id}/", json={})
-    assert response.status_code == 422
-    assert response.json() == {
-        "detail": [
-            {
-                "loc": ["body", "url"],
-                "msg": "field required",
-                "type": "value_error.missing",
-            },
-            {
-                "loc": ["body", "summary"],
-                "msg": "field required",
-                "type": "value_error.missing",
-            },
-        ]
-    }
-
-
-def test_update_summary_invalid_keys(test_app_with_db):
-    response = test_app_with_db.post("/summaries/", json={"url": "https://foo.bar"})
-    summary_id = response.json()["id"]
-
-    # must specify summary text sending update
-    response = test_app_with_db.put(
-        f"/summaries/{summary_id}/", json={"url": "https://foo.bar"}
-    )
-    assert response.status_code == 422
-    assert response.json() == {
-        "detail": [
-            {
-                "loc": ["body", "summary"],
-                "msg": "field required",
-                "type": "value_error.missing",
-            }
-        ]
-    }
-
-    # can not give an invalid URL
+    ],
+    # must also give summary text
+    [
+        1,
+        {"url": "https://foo.bar"},
+        422,
+        [{"loc": ["body", "summary"], "msg": "field required", "type": "value_error.missing"}]
+    ],
+])
+def test_update_summary_invalid(test_app_with_db, summary_id, payload, status_code, detail):
     response = test_app_with_db.put(
         f"/summaries/{summary_id}/",
+        json=payload
+    )
+    assert response.status_code == status_code
+    assert response.json()["detail"] == detail
+
+
+def test_update_summary_invalid_url(test_app):
+    # can not give invalid URL
+    response = test_app.put(
+        "/summaries/1/",
         json={"url": "invalid://url", "summary": "updated!"}
     )
     assert response.status_code == 422
