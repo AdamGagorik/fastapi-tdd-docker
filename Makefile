@@ -77,6 +77,8 @@ docker-github-image:
 docker-github-image-push:
 	docker push docker.pkg.github.com/adamgagorik/fastapi-tdd-docker/summarizer:latest
 
+################################################################################
+.PHONY : heroku-test-httpie
 heroku-test-httpie:
 	@echo "Read summaries"
 	http GET ${APP_URL}/summaries/
@@ -92,3 +94,16 @@ heroku-test-httpie:
 	@echo
 	@echo "Delete a summary"
 	http DELETE ${APP_URL}/summaries/2/
+
+################################################################################
+.PHONY : docker-build-prod
+docker-build-prod:
+	docker build -f project/Dockerfile.prod -t web ./project
+	docker run --name fastapi-tdd -e PORT=8765 -e DATABASE_URL=sqlite://sqlite.db -p 5003:8765 web:latest
+	open http://localhost:5003/ping/
+
+################################################################################
+.PHONY : docker-clean
+docker-clean:
+	docker system prune -f
+	docker volume prune -f
