@@ -2,10 +2,18 @@ from datetime import datetime
 
 import pytest
 
+from app.api import summaries
 from app.api import crud
 
 
-def test_create_summary(test_app, monkeypatch):
+@pytest.fixture()
+def mock_generate_summary(monkeypatch):
+    def mock_generate_summary(summary_id, url):
+        return "This is a dummy summary"
+    monkeypatch.setattr(summaries, "generate_summary", mock_generate_summary)
+
+
+def test_create_summary(test_app, monkeypatch, mock_generate_summary):
     test_request_payload = {"url": "https://foo.bar"}
     test_response_payload = {"id": 1, "url": "https://foo.bar"}
 
