@@ -43,7 +43,7 @@ async def read_all_summaries() -> List[SummarySchema]:
 
 
 @router.delete("/{id}/", response_model=SummaryResponseSchema)
-async def delete_summary(id: int) -> SummaryResponseSchema:
+async def delete_summary(id: int = Path(..., gt=0)) -> SummaryResponseSchema:
     """
     Delete a summary.
     """
